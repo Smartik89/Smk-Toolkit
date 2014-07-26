@@ -5,4 +5,4 @@ Smk Toolkit
 
 
 ###Curently under development and not ready for production!!!
-Follow me, start this repo, watch it, if you want more details. It's Going to Be Awesome. ;)
+Follow me, star this repo, watch it, if you want more details. It's Going to Be Awesome. ;)
