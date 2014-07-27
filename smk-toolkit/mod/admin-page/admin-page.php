@@ -4,6 +4,9 @@
  *
  * Easy the process of creating an admin page in the WP Dashboard.
  * 
+ * @package AdminPage
+ * @since 1.0
+ *
  * -------------------------------------------------------------------------------------
  * @Author: Smartik
  * @Author URI: http://smartik.ws/
@@ -12,7 +15,7 @@
  *
  * @Date:   2014-06-27 12:34:19
  * @Last Modified by:   Smartik
- * @Last Modified time: 2014-07-24 11:01:40
+ * @Last Modified time: 2014-07-27 16:43:10
  *
  */
 if( ! class_exists('Smk_AdminPage') ){
@@ -241,7 +244,7 @@ if( ! class_exists('Smk_AdminPage') ){
 		 *
 		 * @return array All tabs in an associative array. 
 		 */
-		final protected function tabs(){
+		protected function tabs(){
 			
 			$settings = $this->settings();
 			$default_tab_label = __('General', 'smk_toolkit');
@@ -278,7 +281,7 @@ if( ! class_exists('Smk_AdminPage') ){
 					esc_html( $tab['label'] );
 
 				//Tab callback
-				if( isset($tab['callback']) && ( is_string($tab['callback']) || is_array($tab['callback']) ) ) {
+				if( ! empty($tab['callback']) ) {
 					$final_tabs[$tab_count]['callback'] = $tab['callback'];
 				}
 
@@ -426,7 +429,7 @@ if( ! class_exists('Smk_AdminPage') ){
 		 *
 		 * @return array All sections in an associative array. 
 		 */
-		final protected function sections($tab_id){
+		protected function sections($tab_id){
 			foreach ($this->tabs() as $tab_key => $tab_value) {
 				if( $tab_value['id'] == $tab_id ){
 					if( isset($tab_value['sections']) && is_array($tab_value['sections']) ){
@@ -476,7 +479,7 @@ if( ! class_exists('Smk_AdminPage') ){
 		 * @return void 
 		 */
 
-		final public function menu(){
+		public function menu(){
 			if( ! $this->_menuExists($this->id) ){ // If menu does not exist, create it.
 				$settings = $this->pageSettings( (array) $this->settings() );
 				if( $settings['menu_type'] == 'submenu' ){
@@ -513,11 +516,10 @@ if( ! class_exists('Smk_AdminPage') ){
 		 * @param array $settings The settings array 
 		 * @return array The final settings 
 		 */
-		final public function pageSettings($settings = array()){
+		public function pageSettings($settings = array()){
 
 			// Menu type. `menu` or `submenu`
-			if( isset($settings['menu_type']) && 
-				is_string($settings['menu_type']) && 
+			if( !empty($settings['menu_type']) && 
 				in_array( $settings['menu_type'], array('menu', 'submenu') )
 			){
 				$menu_type = trim( $settings['menu_type'] );
@@ -527,41 +529,22 @@ if( ! class_exists('Smk_AdminPage') ){
 			}
 
 			// Parent page menu slug
-			if( isset( $settings['parent_slug'] ) && is_string($settings['parent_slug']) ){
-				$parent_slug = trim( $settings['parent_slug'] );
-			}
-			else{
-				$parent_slug = null;
-			}
-
+			$parent_slug = ! empty( $settings['parent_slug'] ) ? trim( $settings['parent_slug'] ) : null;
+			
 			// Get the correct page title
-			if( isset($settings['page_title']) && is_string($settings['page_title']) ){
-				$page_title = trim( $settings['page_title'] );
-			}
-			else{
-				$page_title = '';
-			}
+			$page_title  = ! empty($settings['page_title']) ? trim( $settings['page_title'] ) : '';
 
 			// Get the correct menu title
-			if( isset($settings['menu_title']) && is_string($settings['menu_title']) ){
-				$menu_title = trim( $settings['menu_title'] );
-			}
-			else{
-				$menu_title = '';
-			}
+			$menu_title  = ! empty($settings['menu_title']) ? trim( $settings['menu_title'] ) : '';
 
 			// Check if page title exists, else assign the menu title if possible
-			if( empty($page_title) ){
-				if( !empty($menu_title) ){
-					$page_title = $menu_title;
-				}
+			if( empty($page_title) && ! empty($menu_title) ){
+				$page_title = $menu_title;
 			}
 
 			// Check if menu title exists, else assign the page title if possible
-			if( empty($menu_title) ){
-				if( !empty($page_title) ){
-					$menu_title = $page_title;
-				}
+			if( empty($menu_title) && ! empty($page_title) ){
+				$menu_title = $page_title;
 			}
 
 			// If both page and menu title are empty, stuck on page id(menu slug)
@@ -571,22 +554,16 @@ if( ! class_exists('Smk_AdminPage') ){
 
 			// Capability
 			$capability = 'manage_options';
-			if( isset($settings['capability']) && is_string($settings['capability']) ){
-				if( in_array( $settings['capability'], $this->_allPossibleCapabilities() ) ){
-					$capability = $settings['capability'];
-				}
+			if( ! empty($settings['capability']) && 
+				in_array( $settings['capability'], $this->_allPossibleCapabilities() ) ){
+				$capability = $settings['capability'];
 			}
 
 			// Menu icon
-			if( isset($settings['menu_icon']) && is_string($settings['menu_icon']) ){
-				$menu_icon = trim( $settings['menu_icon'] );
-			}
-			else{
-				$menu_icon = '';
-			}
+			$menu_icon = ! empty($settings['menu_icon']) ? trim( $settings['menu_icon'] ) : '';
 
 			// Menu Position
-			if( isset($settings['menu_position']) && is_numeric($settings['menu_position']) ){
+			if( ! empty($settings['menu_position']) && is_numeric($settings['menu_position']) ){
 				$menu_position = trim( $settings['menu_position'] );
 			}
 			else{
@@ -683,9 +660,7 @@ if( ! class_exists('Smk_AdminPage') ){
 		 * @return string The full action hook name
 		 */
 		public function action($action){
-			if( is_string($action) ){
-				return $this->id .'_'. $action;
-			}
+			return $this->id .'_'. $action;
 		}
 
 		//------------------------------------//--------------------------------------//
@@ -699,9 +674,7 @@ if( ! class_exists('Smk_AdminPage') ){
 		 * @return string The full action hook name
 		 */
 		public function filter($filter){
-			if( is_string($filter) ){
-				return $this->id .'_'. $filter;
-			}
+			return $this->id .'_'. $filter;
 		}
 
 		//------------------------------------//--------------------------------------//
@@ -715,9 +688,7 @@ if( ! class_exists('Smk_AdminPage') ){
 		 * @return void 
 		 */
 		public function add_action($action, $function_to_add, $priority = 10, $accepted_args = 1){
-			if( is_string($action) ){
-				return add_action( $this->id .'_'. $action, $function_to_add, $priority, $accepted_args);
-			}
+			return add_action( $this->id .'_'. $action, $function_to_add, $priority, $accepted_args);
 		}
 
 		//------------------------------------//--------------------------------------//
@@ -744,9 +715,7 @@ if( ! class_exists('Smk_AdminPage') ){
 		 * @return void 
 		 */
 		public function add_filter( $filter, $function_to_add, $priority = 10, $accepted_args = 1 ){
-			if( is_string($filter) ){
-				return add_filter( $this->id .'_'. $filter, $function_to_add, $priority, $accepted_args);
-			}
+			return add_filter( $this->id .'_'. $filter, $function_to_add, $priority, $accepted_args);
 		}
 
 		//------------------------------------//--------------------------------------//
