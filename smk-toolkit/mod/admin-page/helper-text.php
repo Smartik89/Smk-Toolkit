@@ -10,10 +10,6 @@
  * @Copyright: (c) 2014 Smartik. All rights reserved
  * -------------------------------------------------------------------------------------
  *
- * @Date:   2014-06-27 20:46:12
- * @Last Modified by:   Smartik
- * @Last Modified time: 2014-07-01 20:30:21
- *
  */
 if( !defined('ABSPATH') ) exit();
 ?>
