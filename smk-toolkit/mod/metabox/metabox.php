@@ -53,7 +53,23 @@ if( ! class_exists('Smk_Metabox') ) {
 
 		public function metaboxCallback( $post ){
 			stk_print( $this->settings );
+			do_action( $this->id . '_metabox_fields' );
 		}
 
+		public function addField( $id ){
+			new Smk_Add_Metabox_Fields( $this->id, $id );
+		}
+
+	}
+}
+
+class Smk_Add_Metabox_Fields{
+	protected $id;
+	public function __construct( $metabox_id, $id ){
+		$this->id = $id;
+		add_action( $metabox_id . '_metabox_fields', array( $this, 'show' ) );
+	}
+	public function show(){
+		echo $this->id . '<br />';
 	}
 }
