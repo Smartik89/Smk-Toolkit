@@ -138,6 +138,35 @@ if( !function_exists('stk_add_file') ){
 	}
 }
 
+//------------------------------------//--------------------------------------//
+
+/**
+ * Get all regitered mods
+ *
+ * Get all regitered mods. Every mod is in this function.
+ *
+ * @return array
+ */
+if( ! function_exists('stk_get_registered_mods') ){
+	function stk_get_registered_mods(){
+		return apply_filters( 'stk_register_mod', array() );
+	}
+}
+
+//------------------------------------//--------------------------------------//
+
+/**
+ * Get all regitered mods settings
+ *
+ * Get all settings for all regitered mods.
+ *
+ * @return array
+ */
+if( ! function_exists('stk_get_registered_mods_settings') ){
+	function stk_get_registered_mods_settings(){
+		return apply_filters( 'stk_register_mod_settings', array() );
+	}
+}
 
 /*
 --------------------------------------------------------------------------------
@@ -146,4 +175,16 @@ Mods
 */
 stk_add_file( 'mod', array(
 	'admin-page/admin-page.php',
+	'metabox/metabox.php',
 ));
+
+if( ! function_exists('stk_print') ){
+	function stk_print( $var, $title = false ){
+		if( $title ) echo '<h3>'. $title .'</h3>';
+		echo '<pre>';
+		print_r( $var );
+		echo '</pre>';
+	}
+}
+
+// stk_print( stk_get_registered_mods_settings(), 'Registered mods settings' );

@@ -71,7 +71,7 @@ if( ! class_exists('Smk_AdminPage') ){
 		 * @return string The HTML page
 		 */
 		public function page(){
-			include SMK_MOD_PATH . 'admin-page/helper-text.php';
+			include stk_path('mod') . 'admin-page/helper-text.php';
 		}
 		
 		//------------------------------------//--------------------------------------//
